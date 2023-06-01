@@ -1,0 +1,22 @@
+
+amarelo		0xFFFF01FF//0
+azul		0x01B0F1FF//1
+bege		0xfee69eFF//2
+bordo		0x7b0327FF//3
+caramelho	xa95401FF//4
+castanho	0x674522FF//5
+cinza		0x7f7f7fFF//6
+creame0		xf9f4d4FF//7
+laranja		0xfc8004FF//8
+lilas		0xcc99feFF//9
+marrom		0x674522FF//10
+preto		0x000000FF//11
+rosa		0xf58fb6FF//12
+rosa_choque	0xff04ffFF//13
+roxo		0x9900ccFF//14
+salmao		0xff9a66FF//15
+verde		0x92d14fFF//16
+verde_agua	0x99ff99FF//17
+vermelho	0xfe0000FF//18
+vinho		0x7b0327FF//19
+violeta		0xcd99feFF//20
