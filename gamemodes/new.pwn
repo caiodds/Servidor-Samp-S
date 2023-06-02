@@ -42,7 +42,7 @@ new bool: IsPlayerPolice[MAX_PLAYERS];
 #define Amarelo              0xFFFF00AA
 #define Roxo                 0x9F009FAA
 #define VERDE_AGUA           0x03D687FF
-#define CINZA_ESCURO       	 0x626262FF
+#define CINZA_ESCURO         0x626262FF
 #define VERDE                0x21DD00FF
 #define VERMELHO_CLARO       0xFB0000FF
 #define VERDE_CLARO          0x38FF06FF
@@ -65,6 +65,7 @@ public OnGameModeInit()
 	CreateVehicle(522,2034.4438,1339.2137,10.8203,269.9913, 2, 2, 100);
 	Create3DTextLabel("Digite /equipar", vermelho, 2296.5112,2468.6177,10.8203, 5.0);
     CreatePickup(1239, 1,2296.5112,2468.6177,10.8203);
+	UsePlayerPedAnims();
 
 	return 1;
 }
@@ -86,8 +87,9 @@ public SetPlayerNames(playerid, const name[])
 
 public OnPlayerRequestClass(playerid, classid)
 {
-	 
-	SetPlayerPos(playerid, 1958.3783, 1343.1572, 15.3746);
+	SetSpawnInfo(playerid, 0, 0, 2035.5541,1327.4578,10.8203, 0, 0, 0, 0, 0, 0, 0);
+	SpawnPlayer(playerid);
+	ShowPlayerDialog(playerid,11, DIALOG_STYLE_LIST,"Selecionar Exercito","Exercito Brasileiro\nExercito Portugal","Selecionar", "Fechar");
 	return 1;
 }
 
@@ -102,7 +104,6 @@ public ShowPlayerRG(playerid)
 public OnPlayerConnect(playerid)
 {
 	policia[playerid] = 0;
-
 	g_PlayerIsVIP[playerid] = 0; // Defina como 1 se o jogador for VIP, caso contr?rio, defina como 0
 	SetPlayerName(playerid, "NomePadrão"); // Define um nome padrão para o jogado
 	SendClientMessage(playerid,Verde, "BEM VINDO AO SERVIDOR DIGITE /ajuda");
@@ -353,7 +354,7 @@ if(dialogid == 7){
 				ShowPlayerDialog(playerid,99, DIALOG_STYLE_MSGBOX, "Info org", "EM BREVE","OK", "fechar");
 			}
 			if(listitem == 1){
-				SendClientMessage(playerid,Azul3,"[AVISO PM] VOCE PEGOU EQUIPAMENTO DA POLICIA MILITAR");
+				SendClientMessage(playerid,Azul,"[AVISO PM] VOCE PEGOU EQUIPAMENTO DA POLICIA MILITAR");
 				GivePlayerWeapon(playerid,24, 345);
 				GivePlayerWeapon(playerid,31, 590);
 				GivePlayerWeapon(playerid, 29,890);
@@ -363,81 +364,14 @@ if(dialogid == 7){
 			}
 		}
 	}
-	return 1;
-}
-
-
-
-public OnPlayerClickPlayer(playerid, clickedplayerid, source)
-{
-	return 1;
-}
-
-CMD:menutele(playerid){
-	if(IsPlayerAdmin(playerid)){
-		ShowPlayerDialog(playerid, 2, DIALOG_STYLE_LIST,"TELES","LV\nLS\nSF", "IR","FECHAR");
-	}else{
-		ShowPlayerDialog(playerid, 3, DIALOG_STYLE_MSGBOX,"ERRO!","VOCÊ NÃO É UM ADM!", "IR","FECHAR");
+	if(dialogid == 11){
+		if(response){
+			if(listitem == 0){
+				SetPlayerPos(playerid,-1336.3706,450.284,7.1875);
+				SetPlayerInterior(playerid,0);
+				SendClientMessage(playerid,Verde, "Bem vindo ao Exercito Brasileiro");
+			}
+		}
 	}
-	return 1;
-}
-
-CMD:vipbronze(playerid,params[])
-{
-	 if(g_PlayerIsVIP[playerid]){
-		ShowPlayerDialog(playerid, 5, DIALOG_STYLE_LIST, "MENU VIP BRONZE", "KIT ARMA BRONZE 1\nKIT ARMA BRONZE 2", "Selecionar", "Fechar");
-	 }else{
-		 SendClientMessage(playerid, vermelho, "Você precisa ser Vip para usar este comando!");
-	 }  
-			 	
-    return 1;
-}
-CMD:darvip(playerid,params[]){
-	if(IsPlayerAdmin(playerid)){
-
-    new targetid = strval(params);
-		if (IsPlayerConnected(targetid))
-    {
-        SendClientMessage(playerid, Azul, "O ID do jogador é válido.");
-		g_PlayerIsVIP[playerid] = 1;
-    }
-    else
-    {
-        SendClientMessage(playerid, vermelho, "O ID do jogador é inválido ou o jogador está offline.");
-    }
-	}else{
-		SendClientMessage(playerid, vermelho,"[EROO COMANDO] Esse comando somente adms podem usar");
-	}
-	return 1;
-}
-CMD:policia(playerid){
-	policia[playerid] = 1;
-	SetPlayerPos(playerid,2287.2568,2430.9651,10.8203);
-	SetPlayerSkin(playerid, 281);
-	SendClientMessage(playerid,AZUL_CLARO,"[AVISO PM] VOCE ENTROU NA POLICIA MILITAR");
-	return 1;
-}
-CMD:pedircontas(playerid){
-	policia[playerid] = 0;
-	SendClientMessage(playerid, vermelho,"[AVISO] VOCE SAIU DA POLICIA");
-	return 1;
-}
-CMD:veiculos(playerid){
-    ShowPlayerDialog(playerid, 7, DIALOG_STYLE_LIST, "Menu Veiculos","Infernus\nFordGT\nSupra", "Pegar", "Fechar");
-    return 1;
-}
-CMD:ajuda(playerid){
-	ShowPlayerDialog(playerid, 8, DIALOG_STYLE_MSGBOX,"Ajuda","{FF0000}/veiculos\n{FF0000}/policia{FFFFFF}\n{0000FF}/menutele(admins){FFFFFF}\n/pedircontas(para sair da pm)", "Ok", "Fechar");
-	return 1;
-}
-CMD:equipar(playerid){
-	if(IsPlayerInRangeOfPoint(playerid,3.0, 2296.5112,2468.6177,10.8203)){
-		if(policia[playerid]){
-		ShowPlayerDialog(playerid, 9, DIALOG_STYLE_LIST,"=== MENU ORG PM === ","Info Orgs\nEquipar ORG\nMembros ativos","Pegar","Cancelar");
-	}else{
-		SendClientMessage(playerid,vermelho, "[ERRO] Voce nao e um policial!");
-	}
-	}
-	
 	return 1;
 }
