@@ -63,6 +63,8 @@ public OnGameModeInit()
 	CreateVehicle(596,2290.8079,2478.1016,10.5474,0.6902,3,3, 1, 1, 100);
 	CreateVehicle(596,2291.0129,2460.4814,10.5474,0.6902,3,3, 1, 1, 100);
 	CreateVehicle(522,2034.4438,1339.2137,10.8203,269.9913, 2, 2, 100);
+	Create3DTextLabel("Digite /equipar", vermelho, 2296.5112,2468.6177,10.8203, 5.0);
+    CreatePickup(1239, 1,2296.5112,2468.6177,10.8203);
 
 	return 1;
 }
@@ -161,10 +163,11 @@ public OnPlayerExitVehicle(playerid, vehicleid)
 public OnPlayerStateChange(playerid, newstate, oldstate)
 {    if (newstate == PLAYER_STATE_DRIVER) // O jogador entrou no veículo como motorista
     {
-        if (!IsPlayerPolice[playerid]) // Se o jogador NÃO é um policial
+        if (!policia[playerid]) // Se o jogador NÃO é um policial
         {
+
             new vehicleid = GetPlayerVehicleID(playerid);
-            if (GetVehicleModel(vehicleid) == 596 && 411) // Verifica o modelo do veículo usando o ID
+            if (GetVehicleModel(vehicleid) == 596) // Verifica o modelo do veículo usando o ID
             {
                 RemovePlayerFromVehicle(playerid);
                 SendClientMessage(playerid,vermelho, "Você foi ejetado do veículo por não ser um policial!");
@@ -172,7 +175,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
         }
         else
         {
-            // O jogador é um policial
+            
         }
     }
 	return 1;
@@ -344,6 +347,22 @@ if(dialogid == 7){
                 SendClientMessage(playerid, 0x00FF80AA, "): Veiculo criado com sucesso!");
         }
     }
+	if(dialogid == 9){
+		if(response){
+			if(listitem == 0){
+				ShowPlayerDialog(playerid,99, DIALOG_STYLE_MSGBOX, "Info org", "EM BREVE","OK", "fechar");
+			}
+			if(listitem == 1){
+				SendClientMessage(playerid,Azul3,"[AVISO PM] VOCE PEGOU EQUIPAMENTO DA POLICIA MILITAR");
+				GivePlayerWeapon(playerid,24, 345);
+				GivePlayerWeapon(playerid,31, 590);
+				GivePlayerWeapon(playerid, 29,890);
+			}
+			if(listitem == 2){
+				ShowPlayerDialog(playerid,99, DIALOG_STYLE_MSGBOX, "Membros Ativos", "EM BREVE","OK", "fechar");
+			}
+		}
+	}
 	return 1;
 }
 
@@ -396,7 +415,6 @@ CMD:policia(playerid){
 	SetPlayerPos(playerid,2287.2568,2430.9651,10.8203);
 	SetPlayerSkin(playerid, 281);
 	SendClientMessage(playerid,AZUL_CLARO,"[AVISO PM] VOCE ENTROU NA POLICIA MILITAR");
-	
 	return 1;
 }
 CMD:pedircontas(playerid){
@@ -410,5 +428,16 @@ CMD:veiculos(playerid){
 }
 CMD:ajuda(playerid){
 	ShowPlayerDialog(playerid, 8, DIALOG_STYLE_MSGBOX,"Ajuda","{FF0000}/veiculos\n{FF0000}/policia{FFFFFF}\n{0000FF}/menutele(admins){FFFFFF}\n/pedircontas(para sair da pm)", "Ok", "Fechar");
+	return 1;
+}
+CMD:equipar(playerid){
+	if(IsPlayerInRangeOfPoint(playerid,3.0, 2296.5112,2468.6177,10.8203)){
+		if(policia[playerid]){
+		ShowPlayerDialog(playerid, 9, DIALOG_STYLE_LIST,"=== MENU ORG PM === ","Info Orgs\nEquipar ORG\nMembros ativos","Pegar","Cancelar");
+	}else{
+		SendClientMessage(playerid,vermelho, "[ERRO] Voce nao e um policial!");
+	}
+	}
+	
 	return 1;
 }
